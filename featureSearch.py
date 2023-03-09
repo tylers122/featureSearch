@@ -14,7 +14,7 @@ def main():
     # alg = input()
 
     data = readFile()
-    forward()
+    backward()
 
 def readFile():
     name = input("Input file name: ")
@@ -53,6 +53,36 @@ def forward():
     
 
 def backward():
-    pass
+    currFeat = []
+    solution = []
+    bestAcc = 0
+
+    for i in range(1, 5):
+        currFeat.append(i)
+
+    for i in range(1, 4):
+        remFeat = 0
+        currBestAcc = 0
+        for j in currFeat:
+            removed = currFeat.copy()
+            removed.remove(j)
+            accuracy = random.randint(0, 1000) / 10
+
+            print("Removing", str(j), "using feature(s)", str(currFeat), "accuracy is", str(accuracy) + "%")
+            if accuracy > currBestAcc:
+                currBestAcc = accuracy
+                solution = currFeat.copy()
+                remFeat = j
+
+        if currBestAcc < bestAcc:
+            print("Warning, Accuracy has decreased!")
+            break
+        bestAcc = currBestAcc
+        solution = currFeat.copy()
+        currFeat.remove(remFeat)
+        print("Feature set", str(currFeat), "was best, accuracy is", str(currBestAcc) + "%")
+        print()
+
+    print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc) + "%")
 
 main()
