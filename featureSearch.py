@@ -1,6 +1,8 @@
 import numpy as np
 import time
 import random
+import sys
+import math
 
 def main():
     # print("Welcome to Tyler See's Feature Selection Algorithm!")
@@ -14,13 +16,51 @@ def main():
     # alg = input()
 
     data = readFile()
-    backward()
+    leaveOneOut(data, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], -1)
 
 def readFile():
     name = input("Input file name: ")
 
     data = np.loadtxt(name)
     return data   
+
+def leaveOneOut(data, currSet, addFeat):
+    if addFeat != -1:
+        currSet = currSet.copy()
+        currSet.append(addFeat)
+
+    numCorrect = 0
+
+    for i in range(len(data)):
+        classify = []
+        for feature in currSet:
+            classify.append(data[i][feature])
+
+        currClass = data[i][0]
+        nnDistance = sys.maxsize
+        nnLocation = sys.maxsize
+
+        for j in range(len(data)):
+            if j != i:
+                check = []
+                for feature in currSet:
+                    check.append(data[j][feature])
+
+                distance = math.dist(classify, check)
+                if distance < nnDistance:
+                    nnDistance = distance
+                    nnLocation = j
+                    nnClass = data[nnLocation][0]
+
+        print(i + 1, "is in class", currClass)
+        print("Nearest neighbor is", str(nnLocation + 1) + ", in class", nnClass)
+
+        if currClass == nnClass:
+            numCorrect += 1
+
+    accuracy = numCorrect / len(data)
+    print(accuracy)
+        
 
 def forward():
     currFeat = []
