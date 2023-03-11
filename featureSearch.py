@@ -111,7 +111,7 @@ def forward(data):
         for j in range(1, len(data[0])):
             if j not in currFeat:
                 accuracy = leaveOneOut(data, currFeat, j)
-                print("Using feature(s)", str(currFeat + [j]), "accuracy is", str(accuracy) + "%")
+                print("Using feature(s)", str(currFeat + [j]), "accuracy is", str(accuracy * 100) + "%")
                 if accuracy > currBestAcc:
                     currBestAcc = accuracy
                     addFeat = j
@@ -124,10 +124,10 @@ def forward(data):
         bestAcc = currBestAcc
         solution.append(addFeat)
         currFeat.append(addFeat)
-        print("Feature set", str(currFeat), "was best, accuracy is", str(currBestAcc) + "%")
+        print("Feature set", str(currFeat), "was best, accuracy is", str(currBestAcc * 100) + "%")
         print()
 
-    print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc) + "%")
+    print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc * 100) + "%")
 
     
 def backward(data):
@@ -146,7 +146,7 @@ def backward(data):
             removed.remove(j)
             accuracy = leaveOneOut(data, removed, -1)
 
-            print("Removing", str(j), "using feature(s)", str(currFeat), "accuracy is", str(accuracy) + "%")
+            print("Removing", str(j), "using feature(s)", str(currFeat), "accuracy is", str(accuracy * 100) + "%")
             if accuracy > currBestAcc:
                 currBestAcc = accuracy
                 solution = currFeat.copy()
@@ -160,9 +160,9 @@ def backward(data):
         bestAcc = currBestAcc
         solution = currFeat.copy()
         currFeat.remove(remFeat)
-        print("Feature set", str(currFeat), "was best, accuracy is", str(currBestAcc) + "%")
+        print("Feature set", str(currFeat), "was best, accuracy is", str(currBestAcc * 100) + "%")
         print()
 
-    print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc) + "%")
+    print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc * 100) + "%")
 
 main()
