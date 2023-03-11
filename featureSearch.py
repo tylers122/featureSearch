@@ -1,4 +1,9 @@
-import numpy as np
+#Works Cited:
+#https://numpy.org/doc/stable/user/quickstart.html
+#https://www.geeksforgeeks.org/find-the-number-of-rows-and-columns-of-a-given-matrix-using-numpy/
+#https://www.w3schools.com/python/ref_math_dist.asp
+
+import numpy as np  #used numpy to store data easier https://numpy.org/doc/stable/user/quickstart.html
 import sys
 import math
 
@@ -19,7 +24,7 @@ def main():
     alg = input()
     print()
 
-    accuracy = leaveOneOut(data, [], -1)
+    accuracy = leaveOneOut(data, [], -1)    #initial accuracy
 
     print()
     print("This dataset has", features - 1, "features (not including the class attribute), with", instances, "instances.")
@@ -50,7 +55,10 @@ def readFile(personal):
         name = input("Input file name: ")
 
     data = np.loadtxt(name)
-    return data, np.shape(data)[0], np.shape(data)[1]
+
+    #get number of instances & features by grabbing rows & columns
+    #https://www.geeksforgeeks.org/find-the-number-of-rows-and-columns-of-a-given-matrix-using-numpy/
+    return data, np.shape(data)[0], np.shape(data)[1]   
 
 def leaveOneOut(data, currSet, addFeat):
     if addFeat != -1:
@@ -74,7 +82,9 @@ def leaveOneOut(data, currSet, addFeat):
                 for feature in currSet:
                     check.append(data[j][feature])
 
-                distance = math.dist(classify, check)
+                #euclidean distance of items in lists 
+                #https://www.w3schools.com/python/ref_math_dist.asp
+                distance = math.dist(classify, check)   
                 if distance < nnDistance:
                     nnDistance = distance
                     nnLocation = j
@@ -106,6 +116,7 @@ def forward(data):
                     currBestAcc = accuracy
                     addFeat = j
         
+        #if accuracy decreases, stop searching
         if currBestAcc < bestAcc:
             print("Warning, Accuracy has decreased!")
             print()
@@ -141,6 +152,7 @@ def backward(data):
                 solution = currFeat.copy()
                 remFeat = j
 
+        #if accuracy decreases, stop searching
         if currBestAcc < bestAcc:
             print("Warning, Accuracy has decreased!")
             print()
