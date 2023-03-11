@@ -1,31 +1,56 @@
 import numpy as np
-import time
-import random
 import sys
 import math
 
 def main():
     print("Welcome to Tyler See's Feature Selection Algorithm!")
 
+    print("Type the number for a dataset.")
+    print("1. Personal dataset")
+    print("2. Custom dataset")
+    personal = input()
+    print()
+
+    data, instances, features = readFile(personal)
+
     print("Type the number of the algorithm you want to run.")
     print("1. Forward Selection")
     print("2. Backward Elimination")
     alg = input()
+    print()
 
-    data = readFile()
     accuracy = leaveOneOut(data, [], -1)
 
+    print()
+    print("This dataset has", features - 1, "features (not including the class attribute), with", instances, "instances.")
+    print()
+    print("Running nearest neighbor with no features (default rate), using \"leaving-one-out\" evaluation, I get an accuracy of", str(accuracy) + "%")
+    print()
     print("Beginning search.")
+    print()
+
     if alg == "1":
         forward(data)
     else:
         backward(data)
 
-def readFile():
-    name = input("Input file name: ")
+def readFile(personal):
+    if personal == "1":
+        print("Choose a dataset:")
+        print("1. CS170_Spring_2022_Small_data__62")
+        print("2. CS170_Spring_2022_Large_data__62")
+        choice = input()
+        print()
+
+        if choice == "1":
+            name = "CS170_Spring_2022_Small_data__62.txt"
+        else:
+            name = "CS170_Spring_2022_Large_data__62.txt"
+    else:
+        name = input("Input file name: ")
 
     data = np.loadtxt(name)
-    return data   
+    return data, np.shape(data)[0], np.shape(data)[1]
 
 def leaveOneOut(data, currSet, addFeat):
     if addFeat != -1:
@@ -70,7 +95,6 @@ def forward(data):
     solution = []
     bestAcc = 0
     
-
     for i in range(1, len(data[0])):
         addFeat = 0
         currBestAcc = 0
@@ -84,6 +108,7 @@ def forward(data):
         
         if currBestAcc < bestAcc:
             print("Warning, Accuracy has decreased!")
+            print()
             break
         bestAcc = currBestAcc
         solution.append(addFeat)
@@ -94,7 +119,6 @@ def forward(data):
     print("Finished search! The best feature subset is", str(solution), "which has an accuracy of", str(bestAcc) + "%")
 
     
-
 def backward(data):
     currFeat = []
     solution = []
@@ -109,7 +133,7 @@ def backward(data):
         for j in currFeat:
             removed = currFeat.copy()
             removed.remove(j)
-            accuracy = leaveOneOut(data, remFeat, -1)
+            accuracy = leaveOneOut(data, removed, -1)
 
             print("Removing", str(j), "using feature(s)", str(currFeat), "accuracy is", str(accuracy) + "%")
             if accuracy > currBestAcc:
@@ -119,6 +143,7 @@ def backward(data):
 
         if currBestAcc < bestAcc:
             print("Warning, Accuracy has decreased!")
+            print()
             break
         bestAcc = currBestAcc
         solution = currFeat.copy()
